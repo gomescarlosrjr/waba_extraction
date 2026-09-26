@@ -1,23 +1,23 @@
 # waba_extraction
 
-Transcrição em lote de áudios `.opus` do WhatsApp usando a API da Groq (Whisper large-v3).
+Batch transcription of WhatsApp `.opus` audio files using the Groq API (Whisper large-v3).
 
-> **Privacidade:** áudios (`*.opus`) e transcrições (`transcricoes*.txt`) são dados pessoais e **não** são versionados (veja `.gitignore`). Este repositório contém apenas o código.
+> **Privacy:** audio files (`*.opus`) and transcripts (`transcricoes*.txt` / `transcripts*.txt`) are personal data and are **not** versioned (see `.gitignore`). This repository contains code only.
 
-## Uso
+## Usage
 
-1. Crie uma conta gratuita em https://console.groq.com e gere uma API key.
-2. Instale a dependência:
+1. Create a free account at https://console.groq.com and generate an API key.
+2. Install the dependency:
    ```bash
    pip install groq
    ```
-3. Extraia os arquivos `.opus` do WhatsApp em uma pasta (subpastas são varridas recursivamente).
-4. Rode passando a chave por variável de ambiente (nunca hardcode):
+3. Extract the WhatsApp `.opus` files into a folder (subfolders are scanned recursively).
+4. Run, passing the key via environment variable (never hardcode it):
    ```bash
-   GROQ_API_KEY="sua_chave_aqui" python transcrever_audios.py /caminho/para/pasta
+   GROQ_API_KEY="your_key_here" python transcrever_audios.py /path/to/folder
    ```
-5. O script gera um `transcricoes.txt` na pasta, com data/hora (extraída do nome do arquivo), pasta de origem e o texto transcrito.
+5. The script writes a `transcricoes.txt` in the folder, with the date/time (parsed from the file name), the source folder, and the transcribed text.
 
-## Custo
+## Cost
 
-~R$ 0,20 para ~48 min de áudio (frequentemente coberto pelo tier gratuito da Groq).
+~US$ 0.05 for ~48 min of audio (often covered by Groq's free tier).

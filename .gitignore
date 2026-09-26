@@ -1,4 +1,4 @@
-# Segredos / credenciais — NUNCA versionar
+# Secrets / credentials — NEVER commit
 .env
 .env.*
 *.key
@@ -8,7 +8,7 @@
 *token*
 *credential*
 
-# Dados pessoais do WhatsApp (áudios e transcrições) — ficam só na máquina
+# Personal WhatsApp data (audio and transcripts) — stay local only
 *.opus
 *.ogg
 *.mp3
@@ -16,6 +16,8 @@
 *.wav
 transcricoes*.txt
 transcricoes*.md
+transcripts*.txt
+transcripts*.md
 
 # Python
 __pycache__/
@@ -24,5 +26,5 @@ __pycache__/
 venv/
 .pytest_cache/
 
-# SO
+# OS
 .DS_Store

@@ -6,9 +6,14 @@ Approximate cost: under US$ 0.05 for the ~48 minutes of audio in this case
 
 HOW TO USE:
 1. Create a free account at https://console.groq.com and generate an API key.
-2. pip install groq
-3. Extract the WhatsApp .opus files into folders (e.g. one folder per conversation).
-4. Run:  GROQ_API_KEY="your_key_here" python transcrever_audios.py /path/to/root/folder
+2. pip install -r requirements.txt   (groq + python-dotenv)
+3. Put the WhatsApp .opus files in a folder. Only files at the folder's ROOT are
+   transcribed; subfolders (e.g. an already-processed one) are skipped.
+4. Provide the key in one of two ways:
+   - inline:   GROQ_API_KEY="your_key_here" python transcrever_audios.py /path/to/root/folder
+   - via .env: create a .env file with `GROQ_API_KEY=your_key_here`, then run
+               python transcrever_audios.py /path/to/root/folder
+   The .env is loaded automatically (and is git-ignored, so it stays local).
 5. The script writes a transcricoes.txt file with the date/time (parsed from the
    file name), the source folder, and the transcribed text.
 """
@@ -19,12 +24,24 @@ import glob
 import re
 from groq import Groq
 
+# Load variables from a local .env if python-dotenv is installed (optional).
+# Falls back silently so the script still works with a plain env var.
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python transcrever_audios.py /path/to/root/folder")
         sys.exit(1)
 
     root = sys.argv[1]
+    # Load .env from the current directory and the script's folder, if present.
+    if load_dotenv:
+        load_dotenv(os.path.join(os.getcwd(), ".env"))
+        load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
     api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         print("Set the GROQ_API_KEY environment variable before running.")
@@ -32,9 +49,11 @@ def main():
 
     client = Groq(api_key=api_key)
 
-    # Find every .opus file in any subfolder
-    audio_files = sorted(glob.glob(os.path.join(root, "**", "*.opus"), recursive=True))
-    print(f"Found {len(audio_files)} audio files.")
+    # Only transcribe .opus files at the ROOT of `root`. Subfolders (e.g. an
+    # already-processed `jm_transcricoes/`) are intentionally skipped so
+    # finished work is never re-transcribed.
+    audio_files = sorted(glob.glob(os.path.join(root, "*.opus")))
+    print(f"Found {len(audio_files)} audio files at the root of {root}.")
 
     results = []
     for i, path in enumerate(audio_files, 1):

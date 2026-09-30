@@ -7,15 +7,21 @@ Batch transcription of WhatsApp `.opus` audio files using the Groq API (Whisper 
 ## Usage
 
 1. Create a free account at https://console.groq.com and generate an API key.
-2. Install the dependency:
+2. Install the dependencies:
    ```bash
-   pip install groq
+   pip install -r requirements.txt
    ```
-3. Extract the WhatsApp `.opus` files into a folder (subfolders are scanned recursively).
-4. Run, passing the key via environment variable (never hardcode it):
-   ```bash
-   GROQ_API_KEY="your_key_here" python transcrever_audios.py /path/to/folder
-   ```
+3. Put the WhatsApp `.opus` files in a folder. Only files at the folder's **root** are transcribed; subfolders (e.g. an already-processed one) are skipped.
+4. Provide the API key in one of two ways (never hardcode it):
+   - **Inline:**
+     ```bash
+     GROQ_API_KEY="your_key_here" python transcrever_audios.py /path/to/folder
+     ```
+   - **Via `.env`** (loaded automatically, git-ignored, stays local):
+     ```bash
+     echo 'GROQ_API_KEY=your_key_here' > .env
+     python transcrever_audios.py .
+     ```
 5. The script writes a `transcricoes.txt` in the folder, with the date/time (parsed from the file name), the source folder, and the transcribed text.
 
 ## Cost

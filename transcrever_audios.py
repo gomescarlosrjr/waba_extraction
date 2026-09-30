@@ -7,7 +7,8 @@ Approximate cost: under US$ 0.05 for the ~48 minutes of audio in this case
 HOW TO USE:
 1. Create a free account at https://console.groq.com and generate an API key.
 2. pip install -r requirements.txt   (groq + python-dotenv)
-3. Extract the WhatsApp .opus files into folders (e.g. one folder per conversation).
+3. Put the WhatsApp .opus files in a folder. Only files at the folder's ROOT are
+   transcribed; subfolders (e.g. an already-processed one) are skipped.
 4. Provide the key in one of two ways:
    - inline:   GROQ_API_KEY="your_key_here" python transcrever_audios.py /path/to/root/folder
    - via .env: create a .env file with `GROQ_API_KEY=your_key_here`, then run
@@ -48,9 +49,11 @@ def main():
 
     client = Groq(api_key=api_key)
 
-    # Find every .opus file in any subfolder
-    audio_files = sorted(glob.glob(os.path.join(root, "**", "*.opus"), recursive=True))
-    print(f"Found {len(audio_files)} audio files.")
+    # Only transcribe .opus files at the ROOT of `root`. Subfolders (e.g. an
+    # already-processed `jm_transcricoes/`) are intentionally skipped so
+    # finished work is never re-transcribed.
+    audio_files = sorted(glob.glob(os.path.join(root, "*.opus")))
+    print(f"Found {len(audio_files)} audio files at the root of {root}.")
 
     results = []
     for i, path in enumerate(audio_files, 1):

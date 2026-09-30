@@ -11,7 +11,7 @@ Batch transcription of WhatsApp `.opus` audio files using the Groq API (Whisper 
    ```bash
    pip install -r requirements.txt
    ```
-3. Extract the WhatsApp `.opus` files into a folder (subfolders are scanned recursively).
+3. Put the WhatsApp `.opus` files in a folder. Only files at the folder's **root** are transcribed; subfolders (e.g. an already-processed one) are skipped.
 4. Provide the API key in one of two ways (never hardcode it):
    - **Inline:**
      ```bash
